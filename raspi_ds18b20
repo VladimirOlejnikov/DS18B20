@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<head>
+<meta http-equiv="refresh" content="10; url=/">
+</head>
+<?php
+$dir ="/sys/bus/w1/devices/";
+    if ($dh = opendir($dir)){
+        while ($files = readdir($dh)){
+            if ($files !== "." && $files !== ".." && $files !== "w1_bus_master1"){
+                 $files = $dir.$files."/w1_slave";
+                 $term=fopen($files, "r");
+                 $i = 0;
+                 while (!feof($term)) {
+                     $line[$i] = fgets($term);
+                     $i++;
+                }
+                fclose($term);
+                $tempr = intval(substr($line[1],-6));
+                $temp_d = round ($tempr/1000,2);
+                echo '<font size="10" color="#aa11ff">'. number_format($temp_d, 2)." ".'&deg;'."C".'</font>';
+                echo "<Br>";
+            }
+        }
+    }
+?> 
